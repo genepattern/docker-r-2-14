@@ -16,7 +16,7 @@ DOCKER_CONTAINER=genepattern/docker-r-2-14
 S3_ROOT=s3://moduleiotest
 JOB_QUEUE=TedTest
 JOB_DEFINITION_NAME="R214_Generic"
-JOB_ID=gp_job_R214_helloWorld_$1
+JOB_ID=gp_job_R214_RemoveCNOutliers_$1
 
 
 
