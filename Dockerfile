@@ -2,11 +2,6 @@ FROM r-base:3.1.3
 
 RUN mkdir /build
 RUN mkdir -p /patches/rlib/2.14/site-library
-COPY Dockerfile /build/Dockerfile
-COPY jobdef.json /build/jobdef.json
-COPY RunR.java /build/RunR.java 
-COPY installPackages.R /build/source/installPackages.R
-
 COPY Cairo_1.5-9.tar.gz /build/Cairo_1.5-9.tar.gz
 COPY sources.list /etc/apt/sources.list
 
@@ -44,18 +39,24 @@ RUN  mkdir packages && \
     R CMD INSTALL /build/Cairo_1.5-9.tar.gz
     
 
-
-COPY runS3OnBatchInstallPackages.sh /usr/local/bin/runS3OnBatch.sh
-COPY runLocalInstallPackages.sh /usr/local/bin/runLocal.sh
+COPY common/container_scripts/misc/RunR.java /build/RunR.java
 
 RUN  cd /build && \
-    javac RunR.java && \
-    chmod ugo+x /usr/local/bin/runS3OnBatch.sh 
+    javac RunR.java 
      
-    COPY r214.site.libraries.zip /patches/rlib/
-    RUN cd /patches/rlib/ && \
-    	unzip r214.site.libraries.zip
+COPY r214.site.libraries.zip /patches/rlib/
+RUN cd /patches/rlib/ && \
+    unzip r214.site.libraries.zip
     
+COPY common/container_scripts/runLocal.sh /usr/local/bin/runLocal.sh
+COPY Dockerfile /build/Dockerfile
+COPY jobdef.json /build/jobdef.json
+COPY common/container_scripts/installPackages.R-2 /build/source/installPackages.R
+COPY common/container_scripts/runS3OnBatch.sh /usr/local/bin/runS3OnBatch.sh
+COPY runS3Batch_prerun_custom.sh /usr/local/bin/runS3Batch_prerun_custom.sh
+COPY runS3Batch_postrun_custom.sh /usr/local/bin/runS3Batch_postrun_custom.sh
 
+
+RUN chmod a+x /usr/local/bin/runS3OnBatch.sh /usr/local/bin/runLocal.sh
 CMD ["/usr/local/bin/runS3OnBatch.sh" ]
 

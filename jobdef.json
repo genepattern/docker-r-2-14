@@ -24,7 +24,7 @@
 
             }
         ],
-        "image": "liefeld/r214",
+        "image": "genepattern/docker-r-2-14",
         "memory": 2000,
         "mountPoints": [],
         "ulimits": [],
